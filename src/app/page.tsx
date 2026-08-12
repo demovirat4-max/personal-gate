@@ -50,22 +50,22 @@ function useCountdown() {
 }
 
 // ─── Pomodoro Focus Timer (no fake numbers — pure real-time) ─────────────
+const FOCUS_DURATIONS = { focus: 45 * 60, break: 5 * 60 };
+
 function FocusTimer({ todayWatchedSeconds }: { todayWatchedSeconds: number }) {
   const [mode, setMode] = useState<'focus' | 'break'>('focus');
   const [seconds, setSeconds] = useState(45 * 60);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const DURATIONS = { focus: 45 * 60, break: 5 * 60 };
-
   const reset = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     setRunning(false);
-    setSeconds(DURATIONS[mode]);
+    setSeconds(FOCUS_DURATIONS[mode]);
   }, [mode]);
 
   useEffect(() => {
-    setSeconds(DURATIONS[mode]);
+    setSeconds(FOCUS_DURATIONS[mode]);
     setRunning(false);
     if (intervalRef.current) clearInterval(intervalRef.current);
   }, [mode]);
@@ -86,7 +86,7 @@ function FocusTimer({ todayWatchedSeconds }: { todayWatchedSeconds: number }) {
 
   const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
   const ss = String(seconds % 60).padStart(2, '0');
-  const total = DURATIONS[mode];
+  const total = FOCUS_DURATIONS[mode];
   const radius = 54;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference * (1 - (total - seconds) / total);
