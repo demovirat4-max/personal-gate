@@ -1,0 +1,6 @@
+{
+  "name": "GATE CSE Hub",
+  "description": "Private study dashboard for GATE CSE preparation with weighted subject tracking, curated video lectures, revision queues, and exam-focused AI tools.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
