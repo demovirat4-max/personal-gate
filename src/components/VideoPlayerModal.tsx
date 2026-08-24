@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   ProgressStatus,
   RevisionStatus,
@@ -171,28 +171,36 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
   const currentProgress = state?.progress || resource.defaultStatus || 'not_started';
   const currentRevision = state?.revision || 'solid';
 
-  // Determine effective YouTube embed URL (works for video IDs, playlist URLs, and combinations)
-  const embedUrl = getYouTubeEmbedUrl(resource.url, resource.videoId, resource.playlistId);
+  // Determine effective YouTube embed URL
+  const [useNoCookie, setUseNoCookie] = useState(false);
   const isPlaylist = Boolean(resource.playlistId || extractYouTubePlaylistId(resource.url || ''));
+  
+  const embedUrl = useMemo(() => {
+    const base = getYouTubeEmbedUrl(resource.url, resource.videoId, resource.playlistId);
+    if (!base) return null;
+    return useNoCookie
+      ? base.replace('www.youtube.com', 'www.youtube-nocookie.com')
+      : base.replace('www.youtube-nocookie.com', 'www.youtube.com');
+  }, [resource.url, resource.videoId, resource.playlistId, useNoCookie]);
 
   return (
     <div
       id="video-player-modal-backdrop"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto"
       onClick={handleSafeClose}
     >
       <div
         id="video-player-modal"
-        className="relative w-full max-w-5xl bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
+        className="relative w-full max-w-5xl bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Bar */}
         <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-slate-100 text-slate-900">
           <div className="flex items-center space-x-2 min-w-0 pr-2">
-            <span className="font-mono text-xs text-blue-700 bg-blue-50 px-2 py-0.5 rounded font-bold shrink-0">
+            <span className="font-mono text-xs text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-lg font-bold shrink-0 border border-indigo-100">
               [{subjectCode}]
             </span>
-            <h2 className="text-sm font-semibold truncate text-slate-900">
+            <h2 className="text-sm font-bold truncate text-slate-900">
               {resource.topic}
             </h2>
           </div>
@@ -224,15 +232,16 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Watch directly on YouTube"
-                className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-slate-100 rounded transition-colors"
+                className="inline-flex items-center space-x-1 px-2.5 py-1 text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition-colors border border-red-200"
               >
-                <ExternalLink className="w-4 h-4" />
+                <span>YouTube</span>
+                <ExternalLink className="w-3 h-3" />
               </a>
             )}
 
             <button
               onClick={handleSafeClose}
-              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors cursor-pointer"
+              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -247,12 +256,11 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
               <>
                 <div className="relative pb-[56.25%] h-0 w-full bg-slate-950">
                   <iframe
-                    key={resource.id}
+                    key={`${resource.id}-${useNoCookie}`}
                     src={embedUrl}
                     title={resource.topic}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                     allowFullScreen
-                    referrerPolicy="strict-origin-when-cross-origin"
                     className="absolute top-0 left-0 w-full h-full border-0"
                   />
                 </div>
@@ -263,21 +271,31 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                         Playlist
                       </span>
                     )}
-                    <span>
+                    <span className="truncate">
                       {resource.topic} ({resource.channel || 'GATE CSE'})
                     </span>
                   </span>
-                  {resource.url && (
-                    <a
-                      href={resource.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white font-medium transition-colors shrink-0 ml-2"
+                  
+                  <div className="flex items-center space-x-2 shrink-0">
+                    <button
+                      onClick={() => setUseNoCookie(!useNoCookie)}
+                      title="Switch embed player server if playback is blocked"
+                      className="text-[11px] text-slate-400 hover:text-slate-200 underline cursor-pointer"
                     >
-                      <span>Watch on YouTube</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
+                      {useNoCookie ? 'Use Standard Server' : 'Switch Player Server'}
+                    </button>
+                    {resource.url && (
+                      <a
+                        href={resource.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-medium transition-colors"
+                      >
+                        <span>Open App</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </>
             ) : (

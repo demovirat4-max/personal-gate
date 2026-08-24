@@ -197,12 +197,14 @@ export const SubjectBrowser: React.FC<SubjectBrowserProps> = ({
   const handleSelectSubject = (subj: string) => {
     setSelectedSubject(subj);
     setFilters((prev) => ({ ...prev, subject: subj }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Handle back to all 12 subjects
   const handleBackToAllSubjects = () => {
     setSelectedSubject(null);
     setFilters((prev) => ({ ...prev, subject: 'all' }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Batch action: Mark all topics in current subject as done
