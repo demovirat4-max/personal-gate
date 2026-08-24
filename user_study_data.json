@@ -11,11 +11,18 @@
     }
   },
   "studyStreak": {
-    "currentStreak": 0,
-    "longestStreak": 0,
-    "lastActiveDate": "",
-    "activeDates": [],
-    "history": {}
+    "currentStreak": 1,
+    "longestStreak": 1,
+    "lastActiveDate": "2026-08-24",
+    "activeDates": [
+      "2026-08-24"
+    ],
+    "history": {
+      "2026-08-24": 2
+    },
+    "dailyMinutes": {
+      "2026-08-24": 50
+    }
   },
   "weeklyPlan": null,
   "subjectWeights": null,
