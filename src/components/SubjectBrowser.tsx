@@ -53,10 +53,8 @@ export const SubjectBrowser: React.FC<SubjectBrowserProps> = ({
   onAskAi,
   onOpenChapterMCQ,
 }) => {
-  // Selected subject state for drill-down view
-  const [selectedSubject, setSelectedSubject] = useState<string | null>(
-    filters.subject && filters.subject !== 'all' ? filters.subject : null
-  );
+  // Selected subject derived directly from parent filters.subject to guarantee 100% stable state across modal opens and re-renders
+  const selectedSubject = filters.subject && filters.subject !== 'all' ? filters.subject : null;
 
   // Filter inside the selected subject topics (all | in_progress | needs_revision | done | not_started)
   const [topicStatusFilter, setTopicStatusFilter] = useState<string>('all');
@@ -195,14 +193,12 @@ export const SubjectBrowser: React.FC<SubjectBrowserProps> = ({
 
   // Handle clicking a subject card to drill-down
   const handleSelectSubject = (subj: string) => {
-    setSelectedSubject(subj);
     setFilters((prev) => ({ ...prev, subject: subj }));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Handle back to all 12 subjects
   const handleBackToAllSubjects = () => {
-    setSelectedSubject(null);
     setFilters((prev) => ({ ...prev, subject: 'all' }));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

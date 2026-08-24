@@ -122,14 +122,19 @@ export const TopicCard: React.FC<TopicCardProps> = ({
       {/* Main Title with Play Button */}
       <div>
         <button
-          onClick={() => onPlayVideo(resource)}
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onPlayVideo(resource);
+          }}
           className="text-left w-full group/title focus:outline-none cursor-pointer flex items-start justify-between gap-2"
         >
-          <h3 className="text-xs font-medium text-slate-900 group-hover/title:text-blue-600 transition-colors line-clamp-2 leading-snug">
+          <h3 className="text-xs font-semibold text-slate-900 group-hover/title:text-blue-600 transition-colors line-clamp-2 leading-snug">
             {resource.topic}
           </h3>
-          <div className="shrink-0 p-1.5 rounded-full bg-slate-100 group-hover/title:bg-blue-600 group-hover/title:text-white text-slate-600 transition-colors mt-0.5">
-            <Play className="w-3 h-3 fill-current ml-0.5" />
+          <div className="shrink-0 p-1.5 rounded-full bg-blue-50 group-hover/title:bg-blue-600 text-blue-600 group-hover/title:text-white transition-colors mt-0.5 shadow-2xs">
+            <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
           </div>
         </button>
       </div>

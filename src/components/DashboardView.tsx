@@ -212,11 +212,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </div>
 
                   <button
-                    onClick={() => onPlayVideo(res)}
-                    className="w-full flex items-center justify-center space-x-1.5 py-1.5 px-2.5 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition-colors"
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onPlayVideo(res);
+                    }}
+                    className="w-full flex items-center justify-center space-x-1.5 py-1.5 px-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
                   >
                     <Play className="w-3 h-3 fill-current" />
-                    <span>Study</span>
+                    <span>Study Lecture</span>
                   </button>
                 </div>
               );
