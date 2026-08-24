@@ -162,6 +162,13 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
     onNavigate(direction);
   };
 
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      flushTimerSave();
+      onClose();
+    }
+  };
+
   const handleSafeClose = () => {
     flushTimerSave();
     onClose();
@@ -187,7 +194,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
     <div
       id="video-player-modal-backdrop"
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto"
-      onClick={handleSafeClose}
+      onClick={handleBackdropClick}
     >
       <div
         id="video-player-modal"
