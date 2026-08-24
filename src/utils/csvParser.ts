@@ -34,22 +34,20 @@ export function getYouTubeEmbedUrl(
   const effectivePlaylistId = playlistId || (cleanUrl ? extractYouTubePlaylistId(cleanUrl) : null);
 
   if (effectiveVideoId && effectivePlaylistId) {
-    return `https://www.youtube.com/embed/${effectiveVideoId}?list=${effectivePlaylistId}&autoplay=1&rel=0&enablejsapi=1&playsinline=1`;
+    return `https://www.youtube.com/embed/${effectiveVideoId}?list=${effectivePlaylistId}&enablejsapi=1&playsinline=1&rel=0`;
   }
 
   if (effectiveVideoId) {
-    return `https://www.youtube.com/embed/${effectiveVideoId}?autoplay=1&rel=0&enablejsapi=1&playsinline=1`;
+    return `https://www.youtube.com/embed/${effectiveVideoId}?enablejsapi=1&playsinline=1&rel=0`;
   }
 
   if (effectivePlaylistId) {
-    return `https://www.youtube.com/embed/videoseries?list=${effectivePlaylistId}&autoplay=1&rel=0&enablejsapi=1&playsinline=1`;
+    return `https://www.youtube.com/embed/videoseries?list=${effectivePlaylistId}&enablejsapi=1&playsinline=1&rel=0`;
   }
 
   // Check if it's already an embed URL
   if (cleanUrl.includes('youtube.com/embed/') || cleanUrl.includes('youtube-nocookie.com/embed/')) {
-    return cleanUrl.includes('?')
-      ? `${cleanUrl}&autoplay=1&rel=0&enablejsapi=1&playsinline=1`
-      : `${cleanUrl}?autoplay=1&rel=0&enablejsapi=1&playsinline=1`;
+    return cleanUrl;
   }
 
   return null;

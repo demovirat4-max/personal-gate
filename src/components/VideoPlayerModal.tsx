@@ -292,15 +292,16 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                       {useNoCookie ? 'Use Standard Server' : 'Switch Player Server'}
                     </button>
                     {resource.url && (
-                      <a
-                        href={resource.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-medium transition-colors"
+                      <button
+                        onClick={() => {
+                          window.open(resource.url, 'gate_video_popup', 'width=960,height=540,scrollbars=yes,resizable=yes');
+                        }}
+                        className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-red-600 hover:bg-red-700 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
                       >
-                        <span>Open App</span>
+                        <Play className="w-3 h-3 fill-current" />
+                        <span>Watch on YouTube</span>
                         <ExternalLink className="w-3 h-3" />
-                      </a>
+                      </button>
                     )}
                   </div>
                 </div>
